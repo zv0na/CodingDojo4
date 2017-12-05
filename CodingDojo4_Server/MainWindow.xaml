@@ -7,6 +7,44 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Width="75" Height="25" Content="Start" Margin="10"/>
+            <Button Width="75" Height="25" Content="Stop" Margin="10"/>
+        </StackPanel>
+        <TabControl Margin="10" Grid.Row="1">
+            <TabItem Header="Chat" Height="20" VerticalAlignment="Bottom">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Label Content="Connected Users" Grid.Column="0" Grid.Row="0" Margin="5" />
+                    <ListBox Grid.Column="0" Margin="10" Grid.Row="1"/>
+                    <Button Content="Drop" Grid.Column="0" Grid.Row="2" Width="75" Margin="10" HorizontalAlignment="Right"/>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
+                        <Label Content="Received Messages" Margin="5"/>
+                        <Label Content="?" Margin="5"/>
+                    </StackPanel>
+                    <ListBox Grid.Row="1" Grid.Column="1" Margin="10"/>
+                    <Button Content="Save to Log" Grid.Row="2" Grid.Column="1" Width="75" HorizontalAlignment="Right" Margin="10"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Logs" Height="20" VerticalAlignment="Bottom">
+                
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </Window>
