@@ -34,7 +34,7 @@
                     <Button Content="Drop" Grid.Column="0" Grid.Row="2" Width="75" Margin="10" HorizontalAlignment="Right"/>
 
                     <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
-                        <Label Content="Received Messages" Margin="5"/>
+                        <Label Content="Received Messages:" Margin="5"/>
                         <Label Content="?" Margin="5"/>
                     </StackPanel>
                     <ListBox Grid.Row="1" Grid.Column="1" Margin="10"/>

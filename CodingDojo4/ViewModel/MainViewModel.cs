@@ -1,34 +1,59 @@
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using System;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace CodingDojo4.ViewModel
 {
-    /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
-    /// </summary>
+
     public class MainViewModel : ViewModelBase
     {
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
+        private Client clients;
+        private bool connect = false;
+
+        public string Name { get; set; }
+        public string Nachricht { get; set; }
+        public ObservableCollection<string> EmpfangeneNachrichten { get; set; }
+        public RelayCommand ConnectBtnClick { get; set; }
+        public RelayCommand SendBtnClick { get; set; }
+
         public MainViewModel()
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            Nachricht = "";
+            EmpfangeneNachrichten = new ObservableCollection<string>();
+
+            ConnectBtnClick = new RelayCommand(
+                () =>
+                {
+                    connect = true;
+                    clients = new Client("127.0.0.1", 10100, new Action<string>(NeuEmpfangeneNachrichten), ClientDisconnected);
+
+                },
+            () =>
+            {
+                return (!connect);
+            });
+            SendBtnClick = new RelayCommand(
+      () =>
+      {
+          clients.Send(Name + ": " + Nachricht);
+          EmpfangeneNachrichten.Add("YOU: " + Nachricht);
+      }, () => { return (connect && Nachricht.Length >= 1); });
+        }
+
+        private void NeuEmpfangeneNachrichten(string obj)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                EmpfangeneNachrichten.Add(Nachricht);
+            });
+        }
+
+        private void ClientDisconnected()
+        {
+            connect = false;
+            CommandManager.InvalidateRequerySuggested();
         }
     }
 }
