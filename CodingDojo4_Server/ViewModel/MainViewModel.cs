@@ -55,30 +55,29 @@ namespace CodingDojo4_Server.ViewModel
                                 () => { return connect; });
 
             DropClientBtnClick = new RelayCommand(() =>
-{
-    server.DisconnectSpecificClient(SelectedUser);
-    Users.Remove(SelectedUser);
-},
-    () => { return (SelectedUser != null); });
+            {
+                server.DisconnectSpecificClient(SelectedUser);
+                Users.Remove(SelectedUser);
+            }, () => { return (SelectedUser != null); });
 
 
         }
-            public void UpdateGuiWithNewMessage(string message)
+        public void UpdateGuiWithNewMessage(string message)
+        {
+            App.Current.Dispatcher.Invoke(() =>
             {
-                App.Current.Dispatcher.Invoke(() =>
+                string name = message.Split(':')[0];
+                if (!Users.Contains(name))
                 {
-                    string name = message.Split(':')[0];
-                    if (!Users.Contains(name))
-                    {
-                        Users.Add(name);
-                    }
-                    Nachrichten.Add(message);
-                    RaisePropertyChanged("NoOfReceivedMessages");
-                });
+                    Users.Add(name);
+                }
+                Nachrichten.Add(message);
+                RaisePropertyChanged("NoOfReceivedMessages");
+            });
 
 
 
 
-            }
         }
     }
+}
