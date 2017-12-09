@@ -41,7 +41,7 @@ namespace CodingDojo4
         private void Receive()
         {
             string message = "";
-            while (!message.Equals("@quit"))
+            while (!message.Contains("@quit"))
             {
                 int length = clientsocket.Receive(buffer);
                 message = Encoding.UTF8.GetString(buffer, 0, length);

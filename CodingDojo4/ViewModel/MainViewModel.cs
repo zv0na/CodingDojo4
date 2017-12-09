@@ -27,7 +27,7 @@ namespace CodingDojo4.ViewModel
                 () =>
                 {
                     connect = true;
-                    clients = new Client("127.0.0.1", 10100, new Action<string>(NeuEmpfangeneNachrichten), ClientDisconnected);
+                    clients = new Client("127.0.0.1", 8090, new Action<string>(NeuEmpfangeneNachrichten), ClientDisconnected);
 
                 },
             () =>
@@ -42,11 +42,13 @@ namespace CodingDojo4.ViewModel
       }, () => { return (connect && Nachricht.Length >= 1); });
         }
 
-        private void NeuEmpfangeneNachrichten(string obj)
+
+
+        private void NeuEmpfangeneNachrichten(string nachricht)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                EmpfangeneNachrichten.Add(Nachricht);
+                EmpfangeneNachrichten.Add(nachricht);
             });
         }
 

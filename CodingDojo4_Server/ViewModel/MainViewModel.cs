@@ -1,34 +1,84 @@
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace CodingDojo4_Server.ViewModel
 {
-    /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
-    /// </summary>
+
     public class MainViewModel : ViewModelBase
     {
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
+        private Server server;
+        private const int port = 8090;
+        private const string ip = "127.0.0.1";
+        private bool connect = false;
+
+        public RelayCommand StartBtnClick { get; set; }
+        public RelayCommand StopBtnClick { get; set; }
+        public RelayCommand DropClientBtnClick { get; set; }
+        public ObservableCollection<string> Users { get; set; }
+        public ObservableCollection<string> Nachrichten { get; set; }
+
+        public string SelectedUser { get; set; }
+
+        public int NoOfReceivedMessages
+        {
+            get
+            {
+                return Nachrichten.Count;
+            }
+        }
+
+
         public MainViewModel()
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            Nachrichten = new ObservableCollection<string>();
+            Users = new ObservableCollection<string>();
+
+            StartBtnClick = new RelayCommand(
+                () =>
+                {
+                    server = new Server(ip, port, UpdateGuiWithNewMessage);
+                    server.StartAccepting();
+                    connect = true;
+                },
+                () => { return !connect; });
+
+
+            StopBtnClick = new RelayCommand(
+
+                () =>
+                {
+                    server.StopAccepting();
+                    connect = false;
+                },
+                                () => { return connect; });
+
+            DropClientBtnClick = new RelayCommand(() =>
+{
+    server.DisconnectSpecificClient(SelectedUser);
+    Users.Remove(SelectedUser);
+},
+    () => { return (SelectedUser != null); });
+
+
+        }
+            public void UpdateGuiWithNewMessage(string message)
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    string name = message.Split(':')[0];
+                    if (!Users.Contains(name))
+                    {
+                        Users.Add(name);
+                    }
+                    Nachrichten.Add(message);
+                    RaisePropertyChanged("NoOfReceivedMessages");
+                });
+
+
+
+
+            }
         }
     }
-}
